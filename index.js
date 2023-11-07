@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -36,10 +36,12 @@ app.get('/jobs', async(req,res) => {
   res.send(result);
 })
 
-app.get("/jobDetails/:id", async (req, res) => {
-  const id = req.params.id;
-  const query = { _id: new ObjectId(id) };
-  const result = await jobCollection.findOne(query);
+app.get("/jobDetails", async (req, res) => {
+  let query = {};
+  if(req.query?.email){
+    query = {email: req.query.email}
+  }
+  const result = await addJobCollection.find(query).toArray();
   res.send(result);
 });
 
@@ -52,6 +54,13 @@ app.get('/addJobs', async(req,res) => {
 app.post('/addJobs', async(req,res) => {
   const newJob = req.body;
   const result = await addJobCollection.insertOne(newJob)
+  res.send(result);
+})
+
+app.delete('/addJobs/:id', async(req,res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id)}
+  const result = await addJobCollection.deleteOne(query);
   res.send(result);
 })
 
