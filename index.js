@@ -57,6 +57,11 @@ app.post('/addJobs', async(req,res) => {
   res.send(result);
 })
 
+app.patch('/addjobs/:id', async(req,res) => {
+  const updatedJob = req.body;
+  
+})
+
 app.delete('/addJobs/:id', async(req,res) => {
   const id = req.params.id;
   const query = { _id: new ObjectId(id)}
